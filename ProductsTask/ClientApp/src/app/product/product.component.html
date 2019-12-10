@@ -1,0 +1,63 @@
+<p *ngIf="!productView"><em>Loading...</em></p>
+
+<div *ngIf="!formAvailable">
+  <nav *ngIf="categories && productView">
+    <button *ngFor="let category of categories"
+            class="btn btn-outline-secondary ml-1 mb-1"
+            (click)="getProducts(category.type, 1)"
+            [ngClass]="{'btn-success': productView.currentType == category.type,
+            'btn-outline-secondary': productView.currentType != category.type}">
+      {{ category.type }}
+    </button>
+  </nav>
+
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="productView">
+    <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>category</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of productView.products">
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.category.type }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <nav>
+    <ul class="pagination">
+      <li class="page-item" [ngClass]="{'active': productView.pagingInfo.currentPage == i}"
+          *ngFor="let i of pageRange()">
+        <a class="page-link" (click)="getProducts(productView.currentType, i)"> {{ i }} </a>
+      </li>
+    </ul>
+  </nav>
+
+  <button class="btn btn-secondary" (click)="showForm()">Add Product</button>
+</div>
+
+<div *ngIf="formAvailable">
+  <div>
+    <div class="form-group">
+      <label for="name">Name: </label>
+      <input class="form-control" id="name" name="name" [(ngModel)]="productName" >
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category: </label>
+      <select class="form-control" name="category" id="category" [(ngModel)]="categoryType" d>
+        <option *ngFor="let category of categories" [value]="category.type">{{category.type}}</option>
+      </select>
+    </div>
+
+    <div>
+      <button class="btn btn-secondary" (click)="addProduct()">Add Product</button>
+    </div>
+
+  </div>
+
+</div>
